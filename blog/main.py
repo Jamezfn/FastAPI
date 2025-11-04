@@ -40,11 +40,11 @@ def update(id: int, request: schemas.Blog, db: Session = Depends(get_db)):
     db.commit()
     return blog.first()
 
-@app.get('/blog', status_code=status.HTTP_200_OK)
+@app.get('/blog', status_code=status.HTTP_200_OK, response_model=list[schemas.ShowBlog])
 def get_all(db: Session = Depends(get_db)):
     return db.query(models.Blog).all()
 
-@app.get('/blog/{id}', status_code=status.HTTP_200_OK)
+@app.get('/blog/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowBlog)
 def get(id: int, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     if not blog:
