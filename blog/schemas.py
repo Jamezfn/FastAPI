@@ -7,3 +7,8 @@ class Blog(BaseModel):
 class ShowBlog(BaseModel):
     title: str
     body: str
+
+class User(BaseModel):
+    username: str
+    email: str
+    password: str
