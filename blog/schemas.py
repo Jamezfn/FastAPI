@@ -16,3 +16,7 @@ class User(BaseModel):
 class ShowUser(BaseModel):
     name: str
     email: str
+    blogs: list[ShowBlog] = []
+
+class ShowBlogWithUser(ShowBlog):
+    creator: ShowUser
