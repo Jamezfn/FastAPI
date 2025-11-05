@@ -1,2 +1,6 @@
 fastapi
 uvicorn
+passlib
+sqlalchemy
+bcrypt
+argon2-cffi
