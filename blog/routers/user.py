@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from hashing import Hash
 
 import schemas, models
 from dB import get_db
+from repository import user
 
 router = APIRouter(
     prefix='/user',
@@ -12,19 +13,21 @@ router = APIRouter(
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.ShowUser)
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
-    if db.query(models.User).filter(models.User.email == request.email).first():
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Email already exists')
-
-    new_user = models.User(name=request.name, email=request.email, password=Hash.argon2(request.password))
-
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)    
-    return new_user
+    return user.create(request, db)
 
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowUser)
 def get_user(id: int, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.id == id).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'User with id {id} not found')
-    return user
+    return user.get(id, db)
+
+@router.get('/', status_code=status.HTTP_200_OK, response_model=list[schemas.ShowUser])
+def get_users(db: Session = Depends(get_db)):
+    return user.all(db)
+
+@router.put('/{id}', status_code=status.HTTP_202_ACCEPTED, response_model=schemas.ShowUser)
+def update_user(id: int, request: schemas.User, db: Session = Depends(get_db)):
+    return user.update(id, request, db)
+
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(id: int, db: Session = Depends(get_db)):
+    user.delete(id, db)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

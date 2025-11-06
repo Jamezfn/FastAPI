@@ -7,7 +7,7 @@ class Blog(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     body = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
 
     creator = relationship("User", back_populates="blogs")
 
@@ -18,4 +18,9 @@ class User(Base):
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
 
-    blogs = relationship("Blog", back_populates="creator")
+    blogs = relationship(
+        "Blog", 
+        back_populates="creator", 
+        cascade="all, delete-orphan", 
+        passive_deletes=True
+        )
