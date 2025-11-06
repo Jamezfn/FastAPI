@@ -25,3 +25,6 @@ class ShowBlogWithUser(ShowBlog):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+class TokenData(BaseModel):
+    username: Optional[str]
