@@ -6,3 +6,5 @@ bcrypt
 argon2-cffi
 python-jose
 pydantic
+pyjwt
+python-multipart

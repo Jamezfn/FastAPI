@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional, List
 
 class Blog(BaseModel):
     title: str
@@ -27,4 +28,4 @@ class UserLogin(BaseModel):
     password: str
 
 class TokenData(BaseModel):
-    username: Optional[str]
+    email: Optional[str]
